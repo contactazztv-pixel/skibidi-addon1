@@ -1,0 +1,79 @@
+// =====================================================
+// build.gradle - Meteor Client Addon
+// Tương thích: Minecraft 1.21.4 + Fabric + Meteor 0.5.8
+// =====================================================
+plugins {
+    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'maven-publish'
+}
+
+// ---- Phiên bản ----
+version = '1.0.0'
+group   = 'com.example.addon'
+
+// ---- Java 21 ----
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+    withSourcesJar()
+}
+
+// ---- Repositories ----
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabricmc.net/' }
+    maven { url 'https://maven.meteordev.org/releases' }  // Meteor Client
+    maven { url 'https://maven.meteordev.org/snapshots' }
+    maven { url 'https://jitpack.io' }
+}
+
+// ---- Dependencies ----
+dependencies {
+    // Fabric Minecraft
+    minecraft "com.mojang:minecraft:1.21.4"
+    mappings  "net.fabricmc:yarn:1.21.4+build.8:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.16.9"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.110.0+1.21.4"
+
+    // Meteor Client (core dependency)
+    // KHÔNG include vào jar vì server đã có
+    modCompileOnly("meteordevelopment:meteor-client:0.5.8") {
+        transitive = false
+    }
+}
+
+// ---- Loom config ----
+loom {
+    // Không cần mixin nếu addon không có mixin riêng
+    // mixin.defaultRefmapName = "example-addon.refmap.json"
+}
+
+// ---- Compile settings ----
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release  = 21
+}
+
+// ---- Jar manifest ----
+jar {
+    from("LICENSE") { rename { "${it}_${project.archivesBaseName}" } }
+
+    manifest {
+        attributes(
+            'Implementation-Title':   project.name,
+            'Implementation-Version': project.version
+        )
+    }
+}
+
+// ---- Maven publish (tùy chọn) ----
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+// ---- Task aliases tiện dụng ----
+// ./gradlew build  -> build jar
+// ./gradlew runClient -> chạy MC client với addon

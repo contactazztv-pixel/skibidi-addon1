@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "example-addon",
+  "version": "1.0.0",
+  "name": "Example Addon",
+  "description": "A Meteor Client addon with modules ported from Glazed and Zinc clients.",
+  "authors": [
+    "YourName"
+  ],
+  "contact": {
+    "homepage": "https://github.com/yourname/example-addon",
+    "sources": "https://github.com/yourname/example-addon"
+  },
+  "license": "MIT",
+  "icon": "assets/example-addon/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "com.example.addon.ExampleAddon"
+    ],
+    "meteor": [
+      "com.example.addon.ExampleAddon"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric": "*",
+    "minecraft": "~1.21.4",
+    "meteor-client": ">=0.5.8"
+  }
+}
